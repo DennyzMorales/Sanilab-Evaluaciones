@@ -1,33 +1,32 @@
 const pool = require('../db'); // Usa tu archivo de conexión a PostgreSQL
 
 // Crear empleado
-exports.crearEmpleado = async (req, res) => {
-  const {
-    nombre,
-    email,
-    telefono,
-    documento,
-    password,
-    puesto,
-    departamento
-  } = req.body;
+  exports.crearEmpleado = async (req, res) => {
+    const {
+      nombre,
+      email,
+      telefono,
+      documento,
+      password,
+      puesto,
+      departamento
+    } = req.body;
 
-  try {
-    const result = await pool.query(`
-      INSERT INTO Empleados (
-        id, nombre, email, telefono, documento, password, puesto, departamento
-      ) VALUES (
-        gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7
-      ) RETURNING *
-    `, [
-      nombre, email, telefono, documento, password, puesto, departamento
-    ]);
-
-    res.status(201).json(result.rows[0]);
-  } catch (err) {
-    res.status(500).json({ error: 'Error al crear empleado', detalle: err.message });
-  }
-};
+    try {
+      const result = await pool.query(`
+        INSERT INTO Empleados (
+          id, nombre, email, telefono, documento, password, puesto, departamento
+        ) VALUES (
+          gen_random_uuid(), $1, $2, $3, $4, $5, $6, $7
+        ) RETURNING *
+      `, [
+        nombre, email, telefono, documento, password, puesto, departamento
+      ]);
+      res.status(201).json(result.rows[0]);
+    } catch (err) {
+      res.status(500).json({ error: 'Error al crear empleado', detalle: err.message });
+    }
+  };
 
 // Obtener todos los empleados (admin)
 exports.obtenerTodosEmpleados = async (req, res) => {

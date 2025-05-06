@@ -7,6 +7,5 @@ router.get('/', ctrl.obtenerTodosEmpleados);
 router.get('/:empleado_id', ctrl.obtenerEmpleadoPorId);
 router.put('/:id', ctrl.actualizarEmpleado);
 router.delete('/:id', ctrl.eliminarEmpleado); // opcional
-
 module.exports = router;
 
