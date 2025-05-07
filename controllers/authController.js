@@ -1,6 +1,7 @@
 // auth.controller.js
 const pool = require('../db');
 const jwt  = require('jsonwebtoken');
+const bcrypt = require('bcrypt'); // o bcryptjs si lo prefieres
 
 // Lee tu secret desde variables de entorno
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -8,7 +9,6 @@ exports.loginEmpleado = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // 1. Buscar usuario activo por email
     const result = await pool.query(
       'SELECT * FROM Empleados WHERE email = $1 AND activo = TRUE',
       [email]
@@ -47,3 +47,22 @@ exports.loginEmpleado = async (req, res) => {
     return res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
+
+exports.registerEmpleado = async (req, res) => {
+  const { nombre, email, password } = req.body;
+  const hashed = await bcrypt.hash(password, 10);
+  const result = await pool.query(
+    `INSERT INTO Empleados (nombre, email, password)
+     VALUES ($1, $2, $3)
+     RETURNING id, nombre, email;`,
+    [nombre, email, hashed]
+  );
+  const user = result.rows[0];
+  const token = jwt.sign(
+    { sub: user.id, email: user.email, nombre: user.nombre },
+    JWT_SECRET,
+    { expiresIn: '2h' }
+  );
+  res.status(201).json({ token, user });
+};
+
