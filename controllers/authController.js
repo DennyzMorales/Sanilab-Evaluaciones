@@ -1,7 +1,7 @@
 // auth.controller.js
 const pool = require('../db');
 const jwt  = require('jsonwebtoken');
-const bcrypt = require('bcrypt'); // o bcryptjs si lo prefieres
+const bcrypt = require('bcryptjs'); // o bcryptjs si lo prefieres
 
 // Lee tu secret desde variables de entorno
 const JWT_SECRET = process.env.JWT_SECRET;
