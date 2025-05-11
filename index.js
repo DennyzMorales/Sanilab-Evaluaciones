@@ -7,7 +7,7 @@ const administradoresRoutes = require('./routes/administradores');
 const authRoutes = require('./routes/auth');
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: 'http://localhost:5173,https://sanilab-evaluaciones-frontend-kerk.onrender.com',
   credentials: true // si vas a usar cookies o headers de autenticación
 }));
 // Usamos express.json() para manejar el cuerpo de las solicitudes con formato JSON
