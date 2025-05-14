@@ -5,9 +5,9 @@ const autoevaluacionesRoutes = require('./routes/autoevaluaciones');
 const empleadosRoutes = require('./routes/empleados');
 const administradoresRoutes = require('./routes/administradores');
 const authRoutes = require('./routes/auth');
-
+const excelRouter = require('./routes/excel')
 app.use(cors({
-  origin: 'http://localhost:5173,https://sanilab-evaluaciones-frontend-kerk.onrender.com',
+  origin: 'http://localhost:5173,https://sanilab-evaluaciones-frontend-kerk.onrender.com,http://localhost:3000',
   credentials: true // si vas a usar cookies o headers de autenticación
 }));
 // Usamos express.json() para manejar el cuerpo de las solicitudes con formato JSON
@@ -16,6 +16,7 @@ app.use('/api/autoevaluaciones', autoevaluacionesRoutes);
 app.use('/api/empleados', empleadosRoutes);
 app.use('/api/administradores', administradoresRoutes);
 app.use('/api/auth',authRoutes)
+app.use('/api/assestment',excelRouter)
 
 app.listen(3000, () => {
   console.log('Servidor corriendo en el puerto 3000');

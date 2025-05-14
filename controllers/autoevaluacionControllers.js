@@ -1,5 +1,5 @@
 const pool = require('../db'); // usa tu archivo de conexión a PostgreSQL
-
+const servicio = require('../services/autoevaluacionesServicios');
 // Crear autoevaluación
 exports.crearAutoevaluacion = async (req, res) => {
   const {
@@ -35,15 +35,18 @@ exports.crearAutoevaluacion = async (req, res) => {
   }
 };
 
+
 // Obtener todas las autoevaluaciones (admin)
 exports.obtenerTodas = async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM Autoevaluaciones ORDER BY creado_el DESC');
-    res.json(result.rows);
+    const datos = await servicio.obtenerAutoevaluacionesConRespuestas();
+    res.json(datos);
   } catch (err) {
+    console.error('Error en controller:', err);
     res.status(500).json({ error: 'Error al obtener autoevaluaciones' });
   }
 };
+
 
 // Obtener autoevaluaciones por empleado
 exports.obtenerPorEmpleado = async (req, res) => {
