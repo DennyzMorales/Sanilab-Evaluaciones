@@ -40,14 +40,22 @@ exports.loginEmpleado = async (req, res) => {
 
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '2h' });
 
-    return res.status(200).json({
-      token,
-      user: {
-        id: user.id,
-        nombre: user.nombre,
-        email: user.email
-      }
-    });
+    return res
+      .cookie('token', token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'Strict',
+        maxAge: 2 * 60 * 60 * 1000
+      })
+      .status(200)
+      .json({
+        user: {
+          id: user.id,
+          nombre: user.nombre,
+          email: user.email
+        }
+      });
+
 
   } catch (err) {
     console.error('Error en loginEmpleado:', err);
@@ -89,7 +97,16 @@ exports.registerEmpleado = async (req, res) => {
       { expiresIn: '2h' }
     );
 
-    res.status(201).json({ token, user });
+    res
+  .cookie('token', token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'Strict',
+    maxAge: 2 * 60 * 60 * 1000
+  })
+  .status(201)
+  .json({ user });
+
 
   } catch (err) {
     console.error('Error en registerEmpleado:', err);

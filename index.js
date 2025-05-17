@@ -6,6 +6,10 @@ const empleadosRoutes = require('./routes/empleados');
 const administradoresRoutes = require('./routes/administradores');
 const authRoutes = require('./routes/auth');
 const excelRouter = require('./routes/excel')
+const cookieParser = require('cookie-parser');
+
+app.use(cookieParser());
+
 app.use(cors({
   origin: 'http://localhost:5173,https://sanilab-evaluaciones-frontend-kerk.onrender.com,http://localhost:3000',
   credentials: true // si vas a usar cookies o headers de autenticación

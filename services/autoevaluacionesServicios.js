@@ -16,6 +16,10 @@ async function obtenerAutoevaluacionesConRespuestas() {
   return result.rows;
 }
 
+async function name(params) {
+  
+}
+
 module.exports = {
   obtenerAutoevaluacionesConRespuestas,
 };
