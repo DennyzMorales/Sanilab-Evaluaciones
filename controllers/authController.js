@@ -72,7 +72,6 @@ exports.registerEmpleado = async (req, res) => {
   }
 
   try {
-    // Verificar si el email ya está registrado
     const existingUser = await pool.query(
       'SELECT * FROM Empleados WHERE email = $1',
       [email]

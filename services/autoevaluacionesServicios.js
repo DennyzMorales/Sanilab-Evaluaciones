@@ -1,4 +1,5 @@
 const pool = require('../db');
+const dayjs = require('dayjs');
 
 async function obtenerAutoevaluacionesConRespuestas() {
   const result = await pool.query(`
@@ -16,10 +17,27 @@ async function obtenerAutoevaluacionesConRespuestas() {
   return result.rows;
 }
 
-async function name(params) {
-  
-}
+const crearAutoevaluacion = async (empleadoId, tipo) => {
+  const hoy = dayjs().format('YYYY-MM-DD');
+
+  const [rows] = await db.query(
+    'SELECT 1 FROM autoevaluaciones WHERE empleado_id = ? AND fecha = ? AND tipo = ? LIMIT 1',
+    [empleadoId, hoy, tipo]
+  );
+
+  if (rows.length > 0) {
+    throw { status: 400, message: 'Ya realizaste esta autoevaluación hoy.' };
+  }
+
+  await db.query(
+    'INSERT INTO autoevaluaciones (empleado_id, fecha, tipo) VALUES (?, ?, ?)',
+    [empleadoId, hoy, tipo]
+  );
+
+  return 'Autoevaluación registrada.';
+};
 
 module.exports = {
   obtenerAutoevaluacionesConRespuestas,
+  crearAutoevaluacion,
 };

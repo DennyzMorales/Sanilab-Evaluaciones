@@ -1,41 +1,43 @@
 const pool = require('../db'); // usa tu archivo de conexión a PostgreSQL
 const servicio = require('../services/autoevaluacionesServicios');
+const autoevaluacionService = require('../services/autoevaluacionService');
+
 // Crear autoevaluación
 exports.crearAutoevaluacion = async (req, res) => {
-  const {
-    empleado_id,
-    desempeno,
-    comunicacion,
-    trabajo_en_equipo,
-    proactividad,
-    comentario,
-    logros,
-    dificultades,
-    estado_emocional,
-    nivel_energia
-  } = req.body;
+  const { empleado_id, comentario } = req.body;
+
+  // Validaciones básicas
+  if (!empleado_id) {
+    return res.status(400).json({ message: 'El campo empleado_id es obligatorio' });
+  }
 
   try {
-    const result = await pool.query(`
-      INSERT INTO Autoevaluaciones (
-        id, empleado_id, desempeno, comunicacion, trabajo_en_equipo, proactividad,
-        comentario, logros, dificultades, estado_emocional, nivel_energia
-      ) VALUES (
-        gen_random_uuid(), $1, $2, $3, $4, $5,
-        $6, $7, $8, $9, $10
-      ) RETURNING *
-    `, [
-      empleado_id, desempeno, comunicacion, trabajo_en_equipo, proactividad,
-      comentario, logros, dificultades, estado_emocional, nivel_energia
-    ]);
+    const result = await pool.query(
+      `INSERT INTO Autoevaluaciones (empleado_id, comentario)
+       VALUES ($1, $2) RETURNING *`,
+      [empleado_id, comentario]
+    );
 
-    res.status(201).json(result.rows[0]);
-  } catch (err) {
-    res.status(500).json({ error: 'Error al crear autoevaluación', detalle: err.message });
+    res.status(201).json({
+      message: 'Autoevaluación creada correctamente',
+      data: result.rows[0],
+    });
+  } catch (error) {
+    console.error('Error al crear autoevaluación:', error);
+    res.status(500).json({ message: 'Error al crear autoevaluación' });
   }
 };
 
+exports.crearAutoevaluacionValidar = async (req , res, next) =>{
+    try {
+      const { empleadoId, tipo } = req.body;
 
+      const resultado = await autoevaluacionService.crearAutoevaluacion(empleadoId, tipo);
+      res.status(200).json({ mensaje: resultado });
+    } catch (err) {
+      next(err); // manejo centralizado de errores
+    }
+};  
 // Obtener todas las autoevaluaciones (admin)
 exports.obtenerTodas = async (req, res) => {
   try {

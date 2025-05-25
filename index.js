@@ -5,7 +5,8 @@ const autoevaluacionesRoutes = require('./routes/autoevaluaciones');
 const empleadosRoutes = require('./routes/empleados');
 const administradoresRoutes = require('./routes/administradores');
 const authRoutes = require('./routes/auth');
-const excelRouter = require('./routes/excel')
+const respuestasRoutes = require('./routes/respuestas');
+const preguntasRoutes = require('./routes/preguntas');
 const cookieParser = require('cookie-parser');
 
 app.use(cookieParser());
@@ -19,8 +20,9 @@ app.use(express.json());
 app.use('/api/autoevaluaciones', autoevaluacionesRoutes);
 app.use('/api/empleados', empleadosRoutes);
 app.use('/api/administradores', administradoresRoutes);
-app.use('/api/auth',authRoutes)
-app.use('/api/assestment',excelRouter)
+app.use('/api/auth',authRoutes);
+app.use('/api/respuestas',respuestasRoutes);
+app.use('/api/preguntas',preguntasRoutes);
 
 app.listen(3000, () => {
   console.log('Servidor corriendo en el puerto 3000');

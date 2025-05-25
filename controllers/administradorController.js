@@ -13,8 +13,8 @@ exports.crearAdministrador = async (req, res) => {
       ) RETURNING *
     `, [nombre, email, password, rol || 'rrhh']);
 
-    res.status(201).json(result.rows[0]);
   } catch (err) {
+    res.status(201).json(result.rows[0]);
     res.status(500).json({ error: 'Error al crear administrador', detalle: err.message });
   }
 };
