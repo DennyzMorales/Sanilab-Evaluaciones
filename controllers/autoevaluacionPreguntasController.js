@@ -30,10 +30,11 @@ exports.crearAutoevaluacionPregunta = async (req, res) => {
 exports.obtenerAutoevaluacionPreguntas = async (req, res) => {
     try {
         const result = await pool.query(
-        `SELECT * FROM PreguntasAutoevaluacion (text,activa,orden,obligatoria) WHERE activa = true ORDER BY orden`);
+        `SELECT * FROM PreguntasAutoevaluacion WHERE activa = TRUE ORDER BY orden`
+        );
         res.json(result.rows);
     } catch (err){
-        res.status(500).json({ error: 'Error al obtener administradores', detalle: err.message });
+        res.status(500).json({ error: 'Error al obtener preguntas', detalle: err.message });
     }
 }
 

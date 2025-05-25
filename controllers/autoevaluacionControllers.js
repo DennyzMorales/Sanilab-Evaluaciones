@@ -1,6 +1,6 @@
 const pool = require('../db'); // usa tu archivo de conexión a PostgreSQL
 const servicio = require('../services/autoevaluacionesServicios');
-const autoevaluacionService = require('../services/autoevaluacionService');
+const autoevaluacionService = require('../services/autoevaluacionesServicios');
 
 // Crear autoevaluación
 exports.crearAutoevaluacion = async (req, res) => {
