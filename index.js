@@ -10,11 +10,25 @@ const preguntasRoutes = require('./routes/preguntas');
 const cookieParser = require('cookie-parser');
 
 app.use(cookieParser());
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://sanilab-evaluaciones-frontend-kerk.onrender.com',
+  'http://localhost:3000'
+];
 
 app.use(cors({
-  origin: 'http://localhost:5173,https://sanilab-evaluaciones-frontend-kerk.onrender.com,http://localhost:3000',
-  credentials: true // si vas a usar cookies o headers de autenticación
+  origin: function(origin, callback){
+    // Permitir solicitudes sin origen (como Postman o curl)
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+      const msg = 'El CORS no está permitido para este origen: ' + origin;
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
 }));
+
 // Usamos express.json() para manejar el cuerpo de las solicitudes con formato JSON
 app.use(express.json());
 app.use('/api/autoevaluaciones', autoevaluacionesRoutes);
