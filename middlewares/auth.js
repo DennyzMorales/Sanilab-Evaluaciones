@@ -1,7 +1,10 @@
 const jwt = require('jsonwebtoken');
 
+// IMPORTANTE: Asegúrate de tener esto
+const JWT_SECRET = process.env.JWT_SECRET || 'tu_secreto_default';
+
 function verificarToken(req, res, next) {
-  const token = req.cookies.token;
+  const token = req.cookies.token; // Si estás usando cookies
 
   if (!token) {
     return res.status(401).json({ message: 'No autorizado' });
@@ -16,3 +19,4 @@ function verificarToken(req, res, next) {
   }
 }
 
+module.exports = verificarToken;
