@@ -3,41 +3,51 @@ const servicio = require('../services/autoevaluacionesServicios'); // si lo nece
 const googleDocsService = require('../services/googleDocsServices');
 
 // Crear respuesta de autoevaluación
-exports.crearRespuestaAutoevaluacion = async (req, res) => {
-    const {
-        autoevaluacion_id,
-        pregunta_id,
-        respuesta
-    } = req.body;
+exports.crearRespuestasAutoevaluacion = async (req, res) => {
+  const { autoevaluacion_id, respuestas } = req.body;
 
-    // Validación básica
-    if (
-        !autoevaluacion_id ||
-        !pregunta_id ||
-        respuesta === undefined ||
-        respuesta < 0 ||
-        respuesta > 10
-    ) {
-        return res.status(400).json({ message: 'Datos inválidos' });
-    }
+  if (!autoevaluacion_id || !Array.isArray(respuestas)) {
+    return res.status(400).json({ message: 'Datos inválidos' });
+  }
+
+  try {
+    const client = await pool.connect();
 
     try {
-        const result = await pool.query(
-            `INSERT INTO RespuestasAutoevaluacion (autoevaluacion_id, pregunta_id, respuesta)
-             VALUES ($1, $2, $3)
-             RETURNING *`,
-            [autoevaluacion_id, pregunta_id, respuesta]
-        );
+      await client.query('BEGIN');
 
-        res.status(201).json({
-            message: 'Respuesta creada correctamente',
-            data: result.rows[0]
-        });
-    } catch (error) {
-        console.error('Error al crear respuesta:', error);
-        res.status(500).json({ message: 'Error al crear respuesta' });
+      for (const r of respuestas) {
+        if (
+          typeof r.pregunta_id !== 'number' ||
+          typeof r.respuesta !== 'number' ||
+          r.respuesta < 0 ||
+          r.respuesta > 10
+        ) {
+          throw new Error('Datos de respuesta inválidos');
+        }
+
+        await client.query(
+          `INSERT INTO RespuestasAutoevaluacion (autoevaluacion_id, pregunta_id, respuesta)
+           VALUES ($1, $2, $3)`,
+          [autoevaluacion_id, r.pregunta_id, r.respuesta]
+        );
+      }
+
+      await client.query('COMMIT');
+      res.status(201).json({ message: 'Respuestas creadas correctamente' });
+    } catch (err) {
+      await client.query('ROLLBACK');
+      console.error(err);
+      res.status(400).json({ message: err.message });
+    } finally {
+      client.release();
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error interno del servidor' });
+  }
 };
+
 // controllers/respuestasController.js
 
 
