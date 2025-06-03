@@ -7,6 +7,7 @@ const administradoresRoutes = require('./routes/administradores');
 const authRoutes = require('./routes/auth');
 const respuestasRoutes = require('./routes/respuestas');
 const preguntasRoutes = require('./routes/preguntas');
+const getUserCookie = require('./routes/user')
 const cookieParser = require('cookie-parser');
 
 app.use(cookieParser());
@@ -37,7 +38,7 @@ app.use('/api/administradores', administradoresRoutes);
 app.use('/api/auth',authRoutes);
 app.use('/api/respuestas',respuestasRoutes);
 app.use('/api/preguntas',preguntasRoutes);
-
+app.use('/api/user',getUserCookie);
 app.listen(3000, () => {
   console.log('Servidor corriendo en el puerto 3000');
 });
