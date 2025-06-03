@@ -43,8 +43,8 @@ exports.loginEmpleado = async (req, res) => {
     return res
       .cookie('token', token, {
         httpOnly: true,
-        secure: false,
-        sameSite: 'Strict',
+        secure: true,
+        sameSite: 'None',
         maxAge: 2 * 60 * 60 * 1000
       })
       .status(200)
@@ -99,8 +99,8 @@ exports.registerEmpleado = async (req, res) => {
     res
   .cookie('token', token, {
     httpOnly: true,
-    secure: false,
-    sameSite: 'Strict',
+    secure: true,
+    sameSite: 'None',
     maxAge: 2 * 60 * 60 * 1000
   })
   .status(201)

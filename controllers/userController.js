@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const express = require('express');
 const cookieParser = require('cookie-parser');
+
 const obtenerUsuario = (req, res) => {
   try {
     const token = req.cookies?.token;
